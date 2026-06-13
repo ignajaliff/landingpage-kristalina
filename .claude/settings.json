@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m http.server 8160 --directory out)",
+      "PowerShell(Start-Sleep -Seconds 2; $edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; $tmp = Join-Path $env:TEMP \"edge-shot5-$\\([guid]::NewGuid\\(\\).ToString\\('N'\\)\\)\"; & $edge --headless=new --disable-gpu --hide-scrollbars --user-data-dir=$tmp --window-size=1280,900 --screenshot=\"d:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png\" \"http://localhost:8160/\" 2>&1 | Out-Null; Start-Sleep -Seconds 2; Write-Output \\(\"bytes: \" + \\(Get-Item 'd:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png'\\).Length\\))",
+      "Bash(find . -iname \"*tuberia*\" -not -path \"./node_modules/*\")",
+      "Bash(ls -la *.png *.jpg *.jpeg *.webp)",
+      "Bash(ls -la public)",
+      "Bash(python -m http.server 8166 --directory out)",
+      "PowerShell(Start-Sleep -Seconds 2; $edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; $tmp = Join-Path $env:TEMP \"edge-h-$\\([guid]::NewGuid\\(\\).ToString\\('N'\\)\\)\"; & $edge --headless=new --disable-gpu --hide-scrollbars --user-data-dir=$tmp --window-size=1280,860 --screenshot=\"d:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png\" \"http://localhost:8166/\" 2>&1 | Out-Null; Start-Sleep -Seconds 2; Write-Output \\(\"bytes: \" + \\(Get-Item 'd:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png'\\).Length\\))",
+      "PowerShell($edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; $tmp = Join-Path $env:TEMP \"edge-h2-$\\([guid]::NewGuid\\(\\).ToString\\('N'\\)\\)\"; & $edge --headless=new --disable-gpu --hide-scrollbars --user-data-dir=$tmp --window-size=1440,1000 --screenshot=\"d:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png\" \"http://localhost:8166/\" 2>&1 | Out-Null; Start-Sleep -Seconds 2; Write-Output \\(\"bytes: \" + \\(Get-Item 'd:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png'\\).Length\\))",
+      "Bash(python -m http.server 8170 --directory out)",
+      "PowerShell(Start-Sleep -Seconds 2; $edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; $tmp = Join-Path $env:TEMP \"edge-f-$\\([guid]::NewGuid\\(\\).ToString\\('N'\\)\\)\"; & $edge --headless=new --disable-gpu --hide-scrollbars --user-data-dir=$tmp --window-size=1280,2400 --screenshot=\"d:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png\" \"http://localhost:8170/\" 2>&1 | Out-Null; Start-Sleep -Seconds 2; Write-Output \\(\"bytes: \" + \\(Get-Item 'd:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png'\\).Length\\))",
+      "Bash(python -m http.server 8174 --directory out)",
+      "PowerShell(Start-Sleep -Seconds 2; $edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; $tmp = Join-Path $env:TEMP \"edge-st-$\\([guid]::NewGuid\\(\\).ToString\\('N'\\)\\)\"; & $edge --headless=new --disable-gpu --hide-scrollbars --user-data-dir=$tmp --window-size=1280,1500 --screenshot=\"d:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png\" \"http://localhost:8174/#features\" 2>&1 | Out-Null; Start-Sleep -Seconds 2; Write-Output \\(\"bytes: \" + \\(Get-Item 'd:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png'\\).Length\\))",
+      "PowerShell($edge = \"C:\\\\Program Files \\(x86\\)\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\"; if \\(-not \\(Test-Path $edge\\)\\) { $edge = \"C:\\\\Program Files\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe\" }; $tmp = Join-Path $env:TEMP \"edge-st2-$\\([guid]::NewGuid\\(\\).ToString\\('N'\\)\\)\"; & $edge --headless=new --disable-gpu --hide-scrollbars --user-data-dir=$tmp --window-size=1280,2100 --screenshot=\"d:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png\" \"http://localhost:8174/\" 2>&1 | Out-Null; Start-Sleep -Seconds 2; Write-Output \\(\"bytes: \" + \\(Get-Item 'd:\\\\new CODE\\\\Landing Kristalina\\\\_verify.png'\\).Length\\))",
+      "PowerShell(gh --version 2>&1)",
+      "PowerShell(gh auth status 2>&1)",
+      "PowerShell(git config --global user.name)",
+      "PowerShell(git config --global user.email)",
+      "PowerShell(if \\($env:GITHUB_TOKEN\\) { \"GITHUB_TOKEN: presente\" } else { \"GITHUB_TOKEN: ausente\" })"
+    ]
+  }
+}
