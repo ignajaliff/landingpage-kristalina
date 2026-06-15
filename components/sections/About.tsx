@@ -4,33 +4,33 @@ import { Icon } from '@/components/Icon';
 export function About() {
   return (
     <section className="section section-soft" id="about">
-      <div className="container about-grid">
-        <div className="reveal">
+      <div className="container">
+        <div className="section-head center reveal">
           <span className="eyebrow">{about.eyebrow}</span>
           <h2>{about.title}</h2>
           <p className="lead">{about.text}</p>
-
-          <ul className="about-list">
-            {about.bullets.map((b) => (
-              <li key={b}>
-                <span className="tick">
-                  <Icon name="check" size={20} />
-                </span>
-                <span>{b}</span>
-              </li>
-            ))}
-          </ul>
-
-          <a
-            href={about.cta.href}
-            className="btn btn-primary"
-            style={{ marginTop: 28 }}
-          >
-            {about.cta.label}
-          </a>
         </div>
 
-        <div className="about-media reveal d2" aria-hidden="true" />
+        <div className="video-wrap reveal d1">
+          {about.youtubeId ? (
+            <div className="video-frame">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${about.youtubeId}`}
+                title={about.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+              />
+            </div>
+          ) : (
+            <div className="video-frame video-placeholder">
+              <span className="video-play">
+                <Icon name="play" size={28} />
+              </span>
+              <span className="video-placeholder-text">Video próximamente</span>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

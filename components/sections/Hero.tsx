@@ -45,7 +45,16 @@ export function Hero() {
         </div>
 
         <div className="hero-visual">
-          <img src={hero.image.src} alt={hero.image.alt} />
+          <img
+            className="hero-logo"
+            src="/kristalina-logo.png"
+            alt="Kristalina"
+          />
+          <img
+            className="hero-photo"
+            src={hero.image.src}
+            alt={hero.image.alt}
+          />
         </div>
       </div>
     </section>

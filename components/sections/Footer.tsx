@@ -7,8 +7,9 @@ export function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <div className="footer-logo">{brand.name}</div>
-            <p>{footer.tagline}</p>
+            <div className="footer-logo">
+              <img src="/kristalina-logo.png" alt={brand.name} />
+            </div>
             <div className="footer-socials">
               {footer.socials.map((s) => (
                 <a key={s.label} href={s.href} aria-label={s.label}>

@@ -1,17 +1,26 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { brand, navLinks, navCta } from '@/lib/data';
 import { Icon } from '@/components/Icon';
 import { cn } from '@/lib/utils/cn';
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // El logo aparece recién cuando se hace scroll hacia abajo.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="nav">
+    <header className={cn('nav', scrolled && 'scrolled')}>
       <div className="container nav-inner">
-        <a href="#top" className="nav-logo">
-          {brand.name}
+        <a href="#top" className="nav-logo" aria-label={brand.name}>
+          <img src="/kristalina-logo.png" alt={brand.name} />
         </a>
 
         <nav className="nav-links">

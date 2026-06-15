@@ -7,9 +7,10 @@ export function Features() {
       <div className="container">
         <div className="section-head center reveal">
           <span className="eyebrow">{featuresSection.eyebrow}</span>
-          <h2>{featuresSection.title}</h2>
+          <h2 className="grad-text">{featuresSection.title}</h2>
         </div>
 
+        {/* --- Cómo opera el sistema --- */}
         <div className="howto-text reveal d1">
           {featuresSection.paragraphs.map((p, i) => (
             <p key={i} className={i === 0 ? 'lead' : undefined}>
