@@ -1,5 +1,6 @@
 'use client';
 import { useScrollReveal } from '@/lib/hooks/useScrollReveal';
+import { Splash } from '@/components/Splash';
 import { Header } from '@/components/sections/Header';
 import { Hero } from '@/components/sections/Hero';
 import { Features } from '@/components/sections/Features';
@@ -16,14 +17,15 @@ export function LandingPage() {
 
   return (
     <>
+      <Splash />
       <Header />
       <main>
         <Hero />
         <Features />
         <Benefits />
-        <Clients />
-        <About />
         <Characteristics />
+        <About />
+        <Clients />
         <Gallery />
         <Contact />
       </main>

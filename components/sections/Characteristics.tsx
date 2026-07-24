@@ -7,7 +7,7 @@ export function Characteristics() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section className="section" id="caracteristicas">
+    <section className="section section-soft" id="caracteristicas">
       <div className="container">
         <div className="section-head center reveal">
           <span className="eyebrow">{characteristics.eyebrow}</span>

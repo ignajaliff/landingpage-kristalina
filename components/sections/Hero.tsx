@@ -18,44 +18,34 @@ export function Hero() {
 
   return (
     <section className="hero" id="top" ref={ref}>
-      <div className="container hero-grid">
-        <div className="hero-copy hero-stagger">
-          <span className="chip">{hero.eyebrow}</span>
-          <h1>{hero.title}</h1>
-          <p className="lead">{hero.subtitle}</p>
+      <div className="container hero-inner hero-stagger">
+        {/* Espacio duro antes de la última palabra: evita que "de" quede
+            colgando y mantiene "de Sarro" junto al envolver el título. */}
+        <h1 className="hero-title">
+          {hero.title.replace(/\s+(\S+)$/, ' $1')}
+        </h1>
+        <p className="lead hero-lead">{hero.subtitle}</p>
 
-          <div className="hero-highlights">
-            {hero.highlights.map((h) => (
-              <div key={h.title} className="hero-hl">
-                <span className="hero-hl-icon">
-                  <Icon name={h.icon} size={20} />
-                </span>
-                <div>
-                  <strong>{h.title}</strong>
-                  <span>{h.text}</span>
-                </div>
+        {/* Tres tarjetas apiladas verticalmente en la columna izquierda */}
+        <div className="hero-cards">
+          {hero.highlights.map((h) => (
+            <div key={h.title} className="hero-card">
+              <span className="hero-card-icon">
+                <Icon name={h.icon} size={20} />
+              </span>
+              <div className="hero-card-body">
+                <strong>{h.title}</strong>
+                <span>{h.text}</span>
               </div>
-            ))}
-          </div>
-
-          <a href={hero.contactCta.href} className="btn btn-primary hero-contact-btn">
-            {hero.contactCta.label}
-            <Icon name="arrow-right" size={18} />
-          </a>
+            </div>
+          ))}
         </div>
 
-        <div className="hero-visual">
-          <img
-            className="hero-logo"
-            src="/kristalina-logo.png"
-            alt="Kristalina"
-          />
-          <img
-            className="hero-photo"
-            src={hero.image.src}
-            alt={hero.image.alt}
-          />
-        </div>
+        {/* Botón principal debajo de las tarjetas */}
+        <a href={hero.contactCta.href} className="btn btn-primary hero-cta">
+          {hero.contactCta.label}
+          <Icon name="arrow-right" size={18} />
+        </a>
       </div>
     </section>
   );

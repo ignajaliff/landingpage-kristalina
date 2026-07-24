@@ -22,7 +22,7 @@ export function Clients() {
   const rowB = clients.slice(half);
 
   return (
-    <section className="section" id="clients">
+    <section className="section section-soft" id="clients">
       <div className="container">
         <div className="section-head center reveal">
           <span className="eyebrow">{clientsSection.eyebrow}</span>

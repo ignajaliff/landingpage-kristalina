@@ -1,9 +1,9 @@
-import { benefits, benefitsSection, featuresNote } from '@/lib/data';
+import { benefits, benefitsSection } from '@/lib/data';
 import { Icon } from '@/components/Icon';
 
 export function Benefits() {
   return (
-    <section className="section section-soft" id="benefits">
+    <section className="section section-benefits" id="benefits">
       <div className="container">
         <div className="section-head center reveal">
           <span className="eyebrow">{benefitsSection.eyebrow}</span>
@@ -11,31 +11,34 @@ export function Benefits() {
           <p className="lead">{benefitsSection.subtitle}</p>
         </div>
 
-        <div className="grid benefits-grid">
+        {/* Un solo panel dividido en 4 áreas: "un equipo → cuatro áreas".
+            Cada área entra escalonada, alternando desde izquierda/derecha. */}
+        <div className="benefits-panel reveal d1">
           {benefits.map((b, i) => (
-            <div key={b.title} className={`card feature-card reveal d${(i % 4) + 1}`}>
-              <span className="feature-icon">
-                <Icon name={b.icon} size={24} />
+            <div
+              key={b.title}
+              className="benefit-area reveal-area"
+              style={{ transitionDelay: `${0.1 + i * 0.13}s` }}
+            >
+              <span className="benefit-area-icon">
+                <Icon name={b.icon} size={22} />
               </span>
               <h3>{b.title}</h3>
-              <ul className="about-list benefit-list">
+              <ul>
                 {b.items.map((it) => (
                   <li key={it}>
-                    <span className="tick">
-                      <Icon name="check" size={18} />
-                    </span>
+                    <Icon name="check" size={15} />
                     <span>{it}</span>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
+          {/* Tarjeta propia solo para la ilustración */}
+          <div className="benefit-area benefit-media reveal-area">
+            <img src="/imagen_tarjeta_sinfondo.png" alt="" aria-hidden="true" />
+          </div>
         </div>
-
-        <p className="features-note reveal">
-          <Icon name="info" size={18} />
-          <span>{featuresNote}</span>
-        </p>
       </div>
     </section>
   );

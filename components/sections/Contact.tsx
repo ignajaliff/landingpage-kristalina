@@ -21,7 +21,7 @@ export function Contact() {
   };
 
   return (
-    <section className="section" id="cta">
+    <section className="section section-soft" id="cta">
       <div className="container">
         <div className="contact-card reveal d1">
           {/* Datos de contacto */}

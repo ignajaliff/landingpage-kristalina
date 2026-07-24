@@ -25,6 +25,11 @@ export const navLinks: NavLink[] = [
   { label: 'Contactos', href: '#cta' },
 ];
 export const navCta = { label: 'Contactar', href: '#cta' };
+// Iconos que van dentro de la burbuja del header, al lado de los links.
+export const navSocials = [
+  { icon: 'instagram', href: '#', label: 'Instagram' },
+  { icon: 'mail', href: 'mailto:kristalina@gmail.com', label: 'Email' },
+] as { icon: IconName; href: string; label: string }[];
 
 /* ---- Hero ---- */
 export interface HeroHighlight {
@@ -67,12 +72,9 @@ export interface Step {
 export const featuresSection = {
   eyebrow: 'Tecnología Kristalina',
   title: '¿Cómo funciona?',
-  paragraphs: [
-    'Los sistemas funcionan como disociadores de fluidos, a través de una fuerza magneto motriz y un paso venturi.',
-    'Al pasar por el dispositivo se genera aragonita cuya principal característica es su alta solubilidad.',
-    'Esta aplicación tiene dos efectos fundamentales: el prevenir y desincrustar.',
-    'No se necesitan filtros y tiene beneficios para la salud.',
-  ],
+  // Subtítulo único y resumido (antes eran 4 párrafos).
+  subtitle:
+    'El agua pasa por el dispositivo y se genera aragonita, que previene y desincrusta el sarro sin filtros ni químicos.',
 };
 export const steps: Step[] = [
   {
@@ -111,6 +113,24 @@ export const benefitsSection = {
 };
 export const benefits: BenefitGroup[] = [
   {
+    icon: 'piggy-bank',
+    title: 'Ahorro y eficiencia',
+    items: [
+      'Menor consumo de detergentes y suavizantes.',
+      'Ahorro de agua y gas gracias a procesos más eficientes.',
+      'Alarga la vida útil de calefones, termotanques y calderas.',
+    ],
+  },
+  {
+    icon: 'shield-check',
+    title: 'Cuida tus equipos',
+    items: [
+      'Evita el deterioro de griferías, fittings y artefactos.',
+      'Previene incrustaciones en lavavajillas, lavadoras y hervidores.',
+      'Menos fallas en todo lo que está en contacto con el agua.',
+    ],
+  },
+  {
     icon: 'heart-pulse',
     title: 'Salud y bienestar',
     items: [
@@ -120,30 +140,13 @@ export const benefits: BenefitGroup[] = [
     ],
   },
   {
-    icon: 'wrench',
-    title: 'Cuida tus equipos',
-    items: [
-      'Evita el deterioro de griferías, fittings y artefactos.',
-      'Previene incrustaciones en lavavajillas, lavadoras y hervidores.',
-      'Menos fallas en todo lo que está en contacto con el agua.',
-    ],
-  },
-  {
-    icon: 'wallet',
-    title: 'Ahorro y eficiencia',
-    items: [
-      'Menor consumo de detergentes y suavizantes.',
-      'Ahorro de agua y gas gracias a procesos más eficientes.',
-      'Reduce mantenciones y costos de suministros.',
-    ],
-  },
-  {
     icon: 'droplets',
     title: 'Calidad del agua',
     items: [
       'Agua de alta calidad para la fabricación de hielo.',
       'Limpia las incrustaciones históricas de cañerías y redes.',
       'Desincrusta cañerías y partes obstruidas con sarro.',
+      'Mejora el sabor y la transparencia del agua en toda la red.',
     ],
   },
 ];

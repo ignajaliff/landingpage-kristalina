@@ -24,3 +24,9 @@ next-env.d.ts
 
 # claude code (config local personal)
 .claude/settings.local.json
+
+# imagenes originales sueltas en la raiz (las versiones que usa la app viven en public/)
+/fondo_aguaedificio7.png
+/fondo_hero.png
+/imagen_tarjeta.png
+/imagen_tarjeta_sinfondo.png
