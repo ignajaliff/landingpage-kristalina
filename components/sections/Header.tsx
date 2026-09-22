@@ -60,8 +60,8 @@ export function Header() {
 
       {/* Menú móvil simple (se muestra al tocar el burger) */}
       {open && (
-        <div className="container" style={{ paddingBottom: 16 }}>
-          <nav className={cn('nav-mobile')} style={{ display: 'grid', gap: 8 }}>
+        <div className="container nav-mobile-wrap">
+          <nav className="nav-mobile">
             {navLinks.map((link) => (
               <a key={link.href} href={link.href} onClick={() => setOpen(false)}>
                 {link.label}

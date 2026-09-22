@@ -353,40 +353,49 @@ p {
    7. ESTILOS POR SECCIÃ“N
    ============================================================ */
 
-/* ---- Nav / Header ---- */
+/* ---- Nav / Header ----
+   La barra flota con aire arriba (también al scrollear). Sobre el hero no
+   tiene fondo; al scrollear su contenido queda ENCERRADO en una caja blanca
+   redondeada con efecto liquid glass. */
 .nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 50;
-  /* Aire respecto al borde superior: flota sobre la foto sin franja */
-  padding-top: clamp(6px, 1.4vw, 14px);
-  /* Transparente sobre el hero (arriba de todo) */
+  padding-top: clamp(8px, 1.4vw, 14px);
+  /* Mismo margen lateral que la tarjeta del hero */
+  padding-inline: clamp(16px, 3vw, 44px);
   background: transparent;
-  border-bottom: 1px solid transparent;
-  transition: background 0.35s var(--ease), border-color 0.35s var(--ease),
-    box-shadow 0.35s var(--ease), padding-top 0.35s var(--ease);
-}
-/* Al hacer scroll: SIN fondo (transparente siempre), solo se pega arriba */
-.nav.scrolled {
-  padding-top: 0;
-  background: transparent;
-  border-bottom-color: transparent;
-  box-shadow: none;
 }
 .nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  height: 68px;
+  height: 76px;
+  padding-inline: clamp(16px, 2vw, 28px);
+  /* Arriba (sobre el hero): SIN fondo. La caja aparece al scrollear. */
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+  box-shadow: none;
+  transition: background 0.35s var(--ease), border-color 0.35s var(--ease),
+    box-shadow 0.35s var(--ease), backdrop-filter 0.35s var(--ease);
 }
-/* La barra ocupa todo el ancho: el logo se pega a la esquina izquierda
-   (más aire respecto a los links, sin superponerse). */
+/* Al scrollear: caja blanca liquid glass (blanco 80% + blur/saturación),
+   borde luminoso, reflejo del canto y una sombra azulada muy suave. */
+.nav.scrolled .nav-inner {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-color: var(--glass-line);
+  box-shadow: 0 8px 24px rgba(10, 100, 170, 0.07), var(--glass-highlight);
+}
+/* Un poco más angosta que la tarjeta del hero y centrada */
 .nav .container.nav-inner {
-  max-width: 100%;
-  padding-inline: clamp(16px, 3vw, 44px);
+  max-width: 1260px;
+  margin-inline: auto;
 }
 .nav-logo {
   display: inline-flex;
@@ -394,23 +403,17 @@ p {
   flex: none;
 }
 .nav-logo img {
-  height: 34px;
+  /* Logo más grande sin cambiar el alto de la barra (76px) */
+  height: 44px;
   width: auto;
   display: block;
 }
-/* Burbuja central: contiene los links y las redes */
+/* Centro: links + redes, sin fondo propio (la caja blanca ya los contiene) */
 .nav-bubble {
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 9px 22px;
-  border-radius: var(--r-full);
-  /* Arriba (sobre el hero): sin píldora. Aparece al scrollear. */
-  background: transparent;
-  transition: background 0.35s var(--ease);
-}
-.nav.scrolled .nav-bubble {
-  background: var(--accent-soft);
+  padding: 0 8px;
 }
 .nav-links {
   display: flex;
@@ -449,26 +452,52 @@ p {
   align-items: center;
   gap: 12px;
 }
-/* Botón "Contactar": transparente arriba, aparece la píldora al scrollear */
+/* Botón "Contactar": píldora celeste suave, igual arriba y al scrollear */
 .nav-cta .btn-primary {
-  background: transparent;
-  color: #14171c;
-  box-shadow: none;
-  transition: background 0.35s var(--ease), box-shadow 0.35s var(--ease);
-}
-.nav.scrolled .nav-cta .btn-primary {
   background: var(--accent-soft);
-  box-shadow: var(--shadow-sm);
+  color: var(--brand-blue);
+  box-shadow: none;
+  transition: background 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
-.nav.scrolled .nav-cta .btn-primary:hover {
+.nav-cta .btn-primary:hover {
   background: color-mix(in srgb, var(--accent-soft) 82%, var(--accent));
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
 }
 .nav-burger {
   display: none;
 }
+/* Menú móvil: segunda caja de vidrio debajo de la barra */
+.nav .container.nav-mobile-wrap {
+  max-width: 100%;
+  padding-inline: 0;
+}
+.nav-mobile {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.84);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-line);
+  border-radius: var(--r-lg);
+  box-shadow: 0 14px 40px rgba(10, 100, 170, 0.16), var(--glass-highlight);
+}
+.nav-mobile a {
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  font-weight: 500;
+  color: #14171c;
+}
+.nav-mobile a:hover {
+  background: var(--accent-soft);
+  color: var(--brand-blue);
+}
 
-/* ---- Hero (pantalla completa, foto cocina + producto Kristalina) ---- */
+/* ---- Hero (tarjeta redondeada con la foto oficina + producto Kristalina) ----
+   Desktop: la sección es BLANCA (el nav y el respiro de abajo quedan limpios) y
+   la foto vive en una tarjeta con bordes redondeados (.hero-frame) alineada con
+   el nav. En móvil la tarjeta ocupa todo el ancho sin radio (ver responsive). */
 .hero {
   position: relative;
   /* Ocupa exactamente la primera pantalla completa */
@@ -477,13 +506,28 @@ p {
   display: flex;
   /* Toda la sección del Hero usa Poppins */
   font-family: var(--poppins);
-  padding-top: calc(68px + clamp(12px, 2.4vw, 28px));
+  /* Deja lugar a la barra fija (aire + caja de 64px) más un respiro */
+  padding-top: calc(clamp(8px, 1.4vw, 14px) + 76px + clamp(12px, 2vw, 22px));
   padding-bottom: clamp(24px, 3vw, 44px);
+  background: var(--bg);
+}
+/* Mismo margen lateral que la barra del nav: la tarjeta se alinea con el logo
+   y el último link. */
+.hero-wrap {
+  display: flex;
+  max-width: 100%;
+  padding-inline: clamp(16px, 3vw, 44px);
+}
+.hero-frame {
+  position: relative;
+  flex: 1;
+  display: flex;
+  width: 100%;
+  border-radius: clamp(20px, 2.4vw, 32px);
   overflow: hidden;
-  /* Base: degradé que CONTINÚA los colores de la foto (menta claro → blanco →
-     menta muy suave). Rellena toda la pantalla en cualquier resolución sin
-     estirar la imagen. El pie se apaga a una menta apenas perceptible para
-     camuflarse con el mármol y empalmar sin línea con "¿Cómo funciona?". */
+  isolation: isolate;
+  /* Base bajo la foto: degradé que continúa sus colores (menta claro → blanco)
+     mientras carga o si la imagen no cubre. */
   background: linear-gradient(
     180deg,
     #eaf6f6 0%,
@@ -492,19 +536,31 @@ p {
     #f2f8f6 76%,
     #f1f7f5 100%
   );
+  box-shadow: 0 18px 50px rgba(15, 60, 90, 0.08);
 }
-/* Velo al PIE: DESENFOCA + funde el mármol/mueble menta de la foto hacia la
-   menta de forma muy gradual, para que la línea turquesa se DISUELVA y se
-   camufle con la imagen y con la sección siguiente. Máscara que atenúa su
-   borde superior para no crear una nueva línea. Va sobre la foto, debajo del
-   contenido. */
-.hero::after {
+/* La FOTO va acá, a tamaño de la tarjeta (cover, sin deformar). Dos versiones:
+   - Desktop: /hero-pc.jpg (16:9, producto a la derecha → el copy va a la izquierda).
+   - Móvil (≤760px): /hero-movil.jpg (9:16), ver bloque responsive al final. */
+.hero-frame::before {
   content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: url('/hero-pc.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+/* Velo al PIE (solo móvil, donde la foto es full-bleed): desenfoca y funde el
+   mármol hacia la menta para empalmar sin línea con la sección siguiente.
+   En desktop la tarjeta termina limpia, así que va oculto. */
+.hero-frame::after {
+  content: '';
+  display: none;
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  /* Solo el último cuarto del hero (3/4 para abajo): tapa menos fondo */
   height: 28%;
   z-index: 0;
   pointer-events: none;
@@ -515,10 +571,8 @@ p {
     rgba(241, 247, 245, 0.6) 74%,
     #f1f7f5 100%
   );
-  /* Desenfoque creciente de la foto de fondo en la franja baja */
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
-  /* La máscara hace que el velo (y su blur) entre de a poco desde arriba */
   -webkit-mask-image: linear-gradient(
     180deg,
     transparent 0%,
@@ -527,49 +581,20 @@ p {
   );
   mask-image: linear-gradient(180deg, transparent 0%, #000 55%, #000 100%);
 }
-/* La FOTO va acá, a su TAMAÑO NATURAL (1584×672, nunca estirada → siempre
-   nítida). Una máscara desvanece sus 4 bordes hacia el degradé, sin costura:
-   arriba se funde bajo el menú, abajo empalma con la menta de la sección. */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-image: url('/fondo_hero.png');
-  background-repeat: no-repeat;
-  background-position: center top;
-  background-size: auto;
-  -webkit-mask-image: linear-gradient(
-      90deg,
-      transparent 0,
-      #000 5%,
-      #000 95%,
-      transparent 100%
-    ),
-    linear-gradient(180deg, transparent 0, #000 7%, #000 66%, transparent 100%);
-  -webkit-mask-composite: source-in;
-  mask-image: linear-gradient(
-      90deg,
-      transparent 0,
-      #000 5%,
-      #000 95%,
-      transparent 100%
-    ),
-    linear-gradient(180deg, transparent 0, #000 7%, #000 66%, transparent 100%);
-  mask-composite: intersect;
-}
 .hero-inner {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  /* Alineado a la IZQUIERDA: el copy queda sobre el espacio libre de la cocina
-     y el producto respira a la derecha. */
+  /* Alineado a la IZQUIERDA: el copy queda sobre el espacio libre de la
+     oficina y el producto respira a la derecha. */
   align-items: flex-start;
   text-align: left;
   width: 100%;
   flex: 1;
   justify-content: center;
+  /* Aire interno de la tarjeta */
+  padding: clamp(28px, 4.5vw, 64px);
 }
 /* Fila: chip "Tecnología antisarro" + botón "Quiero el mío" */
 .hero-actions {
@@ -601,26 +626,26 @@ p {
   /* Dos líneas parejas */
   text-wrap: balance;
   max-width: 20ch;
-  background: linear-gradient(
-    100deg,
-    var(--brand-blue) 0%,
-    var(--accent) 55%,
-    var(--celeste) 100%
-  );
+  /* Blanco → celeste muy claro: se lee sobre la foto clara y mantiene el
+     guiño de marca en la última palabra. */
+  background: linear-gradient(100deg, #ffffff 0%, #ffffff 55%, #d7f1ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  /* Halo blanco difuso: despega las letras de la foto */
-  filter: drop-shadow(0 2px 14px rgba(255, 255, 255, 0.7));
+  /* Sombra azul oscura difusa: despega las letras de las ventanas claras */
+  filter: drop-shadow(0 2px 6px rgba(12, 36, 54, 0.45))
+    drop-shadow(0 10px 28px rgba(12, 36, 54, 0.3));
 }
 /* Subtítulo: azul pizarra con temperatura de marca (82% fg + 18% acento) */
+/* Subtítulo: texto suelto en CELESTE claro y letra fina; la sombra azul
+   oscura lo despega de las ventanas claras. */
 .hero-lead {
   margin-top: clamp(12px, 1.6vw, 18px);
   max-width: 40ch;
-  color: color-mix(in srgb, var(--fg) 82%, var(--accent) 18%);
-  font-weight: 500;
+  color: #c6ecff;
+  font-weight: 400;
   font-size: clamp(1rem, 1.4vw, 1.15rem);
-  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.8);
+  text-shadow: 0 1px 3px rgba(12, 36, 54, 0.5), 0 6px 22px rgba(12, 36, 54, 0.35);
 }
 .hero-cta {
   margin-top: clamp(14px, 2vw, 22px);
@@ -661,23 +686,24 @@ p {
   gap: 14px;
   text-align: left;
   padding: 14px clamp(16px, 1.6vw, 20px);
-  /* Liquid glass: fondo blanco 40% + blur(18px)+saturación 1.6 (difumina y aviva
-     la cocina detrás), borde luminoso, reflejo del canto y sombra azulada. */
-  background: var(--glass-bg);
+  /* Liquid glass con TINTE AZUL (azul marca al 26% + blur): oscurece apenas la
+     foto detrás para que el texto BLANCO se lea, borde y reflejo luminosos. */
+  background: rgba(20, 93, 151, 0.26);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-line);
+  border: 1px solid rgba(255, 255, 255, 0.38);
   border-radius: var(--r-lg);
-  box-shadow: var(--glass-shadow), var(--glass-highlight);
+  box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.45);
   transition: transform 0.25s var(--ease), background 0.25s var(--ease),
     border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
 .hero-card:hover {
   /* Se desliza 4px a la derecha, sube 1px, el vidrio se opaca y el borde toma celeste */
   transform: translate(4px, -1px);
-  background: var(--glass-bg-strong);
-  border-color: color-mix(in srgb, var(--celeste) 45%, var(--glass-line));
-  box-shadow: 0 18px 46px rgba(10, 100, 170, 0.2), var(--glass-highlight);
+  background: rgba(20, 93, 151, 0.38);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 18px 46px rgba(10, 100, 170, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 /* Ícono: "burbuja" de vidrio (círculo con degradé, mismo borde y reflejo) */
 .hero-card-icon {
@@ -688,22 +714,24 @@ p {
   align-items: center;
   justify-content: center;
   border-radius: var(--r-full);
-  background: linear-gradient(145deg, #fdffff, var(--accent-soft));
-  border: 1px solid var(--glass-line);
-  box-shadow: var(--glass-highlight);
-  color: var(--accent);
+  /* Disco blanco translúcido con ícono blanco */
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  color: #ffffff;
 }
 .hero-card-body strong {
   display: block;
   font-size: 1.02rem;
-  color: var(--brand-blue);
+  color: #ffffff;
   margin-bottom: 4px;
+  text-shadow: 0 1px 2px rgba(12, 36, 54, 0.3);
 }
 .hero-card-body span {
   font-size: 0.87rem;
-  /* Mezcla 72% fg / 28% fg-muted */
-  color: color-mix(in srgb, var(--fg) 72%, var(--fg-muted) 28%);
+  color: rgba(255, 255, 255, 0.88);
   line-height: 1.45;
+  text-shadow: 0 1px 2px rgba(12, 36, 54, 0.3);
 }
 
 /* Unión con la sección siguiente: la menta del pie del hero continúa en el
@@ -1828,6 +1856,28 @@ p {
 }
 
 @media (max-width: 760px) {
+  /* Hero: foto vertical (9:16) full-bleed a pantalla completa, sin tarjeta */
+  .hero {
+    min-height: 100svh;
+    padding: 0;
+  }
+  .hero-wrap {
+    padding-inline: 0;
+  }
+  .hero-frame {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .hero-frame::before {
+    background-image: url('/hero-movil.jpg');
+    background-position: center top;
+  }
+  .hero-frame::after {
+    display: block;
+  }
+  .hero-inner {
+    padding: calc(8px + 76px + 20px) var(--pad) clamp(24px, 3vw, 44px);
+  }
   .nav-bubble {
     display: none;
   }

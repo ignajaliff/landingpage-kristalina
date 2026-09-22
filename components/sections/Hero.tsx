@@ -18,7 +18,11 @@ export function Hero() {
 
   return (
     <section className="hero" id="top" ref={ref}>
-      <div className="container hero-inner hero-stagger">
+      {/* .hero-wrap alinea con el nav; .hero-frame es la tarjeta redondeada
+          que lleva la foto de fondo (en móvil ocupa todo el ancho, sin radio). */}
+      <div className="container hero-wrap">
+        <div className="hero-frame">
+          <div className="hero-inner hero-stagger">
         {/* Espacio duro antes de la última palabra: evita que "de" quede
             colgando y mantiene "de Sarro" junto al envolver el título. */}
         <h1 className="hero-title">
@@ -46,6 +50,8 @@ export function Hero() {
           {hero.contactCta.label}
           <Icon name="arrow-right" size={18} />
         </a>
+          </div>
+        </div>
       </div>
     </section>
   );
