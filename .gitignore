@@ -1,32 +1,16 @@
-# dependencies
-/node_modules
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+*.log
 .DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-
-# typescript
-*.tsbuildinfo
+.vercel
 next-env.d.ts
+*.tsbuildinfo
 
-# env
-.env*.local
-
-# claude code (config local personal)
-.claude/settings.local.json
-
-# imagenes originales sueltas en la raiz (las versiones que usa la app viven en public/)
-/fondo_aguaedificio7.png
-/fondo_hero.png
-/imagen_tarjeta.png
-/imagen_tarjeta_sinfondo.png
+# Material de referencia del cliente y kit de origen: no se publican (repositorio público)
+/*.pdf
+/*.zip
+/KNOW - HOW WEB/

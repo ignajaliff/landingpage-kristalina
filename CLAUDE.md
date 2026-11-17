@@ -1,365 +1,256 @@
-# CLAUDE.md — Guía para construir una landing moderna con Next.js
+# CLAUDE.md — Hoja de ruta del proyecto web
 
-> **Qué es este archivo:** una guía de arquitectura + convenciones + errores conocidos
-> para construir páginas web modernas (one-pager / landing) con Next.js, exportadas como
-> sitio **100% estático** y deployadas en **Hostinger** (subiendo `out/`) o **CapRover** (Docker + nginx).
->
-> **Cómo usarlo en un proyecto nuevo:**
-> 1. Copiá este `CLAUDE.md` a la raíz de una carpeta vacía.
-> 2. Abrí Claude Code en esa carpeta (carga `CLAUDE.md` solo).
-> 3. Decí: **"Quiero que empieces a desarrollar la estructura de una página web hecha con
->    Next.js usando todo lo que dice CLAUDE.md."**
-> 4. Después pasás el diseño/contenido y se completa sobre esta base.
->
-> El objetivo es que **todos los proyectos compartan la misma arquitectura, estructura y
-> sistema de diseño**, y que se eviten los errores listados al final.
+> Este archivo es leído automáticamente por Claude al iniciar cualquier conversación en este proyecto.
+> Contiene el contexto de la web, las decisiones tomadas y el estado actual del desarrollo.
+> **Mantenerlo actualizado es obligatorio** — es la memoria del proyecto entre sesiones.
 
 ---
 
-## 0. Instrucciones para Claude (al iniciar un proyecto)
+## Proyecto
 
-Cuando el usuario pida "armá la estructura según CLAUDE.md", hacé **en este orden**:
+**Nombre**: Grupo Kristalina
+**Tipo**: Sitio institucional (home + una página por línea de servicio)
+**Cliente**: [completar]
+**Desarrollado por**: [completar]
+**Inicio**: 2026-11-17
+**Sistema de gestión asociado**: Ninguno todavía
+**Proyecto Supabase compartido**: Ninguno todavía
 
-1. Crear los archivos de configuración (sección 2) **exactamente** como están acá.
-2. `npm install` y, si Next avisa de un CVE, bumpear a la última patch de la misma línea
-   (ej. `npm install next@^14.2.x`). No saltar a una major sin avisar.
-3. Crear `app/layout.tsx` con las fuentes (sección 3) — **cuidado con el bug de la variable circular**.
-4. Crear `app/globals.css` con los **design tokens** y el esqueleto del sistema (sección 4).
-   Usar una **paleta placeholder** si todavía no hay diseño.
-5. Crear la estructura de carpetas (sección 5): `lib/data.ts`, hooks, `components/sections/`.
-6. Crear un hero mínimo + Nav + Footer de ejemplo, **todo el texto desde `lib/data.ts`**.
-7. Crear los archivos de deploy (sección 9): `Dockerfile`, `nginx.conf`, `captain-definition`, `.dockerignore`.
-8. Dejar todo **compilando con `npm run build`** y generando la carpeta `out/`.
-9. Verificar visualmente con un screenshot del `out/` servido (sección 10), no solo "compila".
+### Descripción de la web
 
-Reglas que NO se rompen:
-- **Contenido siempre separado del diseño** (todo en `lib/data.ts`, tipado).
-- **Nunca hardcodear** colores/medidas en componentes: siempre variables CSS.
-- **Componentes interactivos** llevan `"use client"`.
-- Antes de pushear a deploy, **build verde** sí o sí.
+Web de Grupo Kristalina (Chile), dirigida a administradores de edificios. Presenta tres líneas de servicio para el agua y las redes sanitarias, cada una con su marca: **Kristalina KI-O** (sarro e incrustaciones), **Kristalina Klean** (desagües y matrices obstruidas) y **Katharos** (grasas, aceites y olores). Objetivo: que pidan cotización.
 
 ---
 
-## 1. Stack
+## Reglas del proyecto
 
-| Capa | Elección | Por qué |
+Este proyecto respeta estrictamente los siguientes documentos. Leerlos antes de hacer cualquier cambio:
+
+* [ai-pmp/rules.txt](ai-pmp/rules.txt) — Stack Next.js, arquitectura general y reglas de código
+* [ai-pmp/design-rules.txt](ai-pmp/design-rules.txt) — Dirección estética, tipografía, color y animaciones
+* [ai-pmp/frontend-rules.txt](ai-pmp/frontend-rules.txt) — Componentes, secciones, islas dinámicas y formularios
+* [ai-pmp/supabase-web-rules.txt](ai-pmp/supabase-web-rules.txt) — Conexión de solo lectura, `web_config` y RLS
+* [ai-pmp/seo-rules.txt](ai-pmp/seo-rules.txt) — Metadata, Open Graph, sitemap y Core Web Vitals
+* [ai-pmp/error-handling.txt](ai-pmp/error-handling.txt) — Fallbacks y estados de carga
+* [ai-pmp/naming-rules.txt](ai-pmp/naming-rules.txt) — Convenciones de nombres
+* [ai-pmp/git-rules.txt](ai-pmp/git-rules.txt) — Commits y ramas
+
+> La carpeta `KNOW - HOW WEB/` es el kit de origen: no se edita desde este proyecto ni forma parte del build.
+> **Este proyecto se desvía del kit en un punto central: es export estático** (ver "Decisiones técnicas"). Donde las reglas hablen de ISR, `revalidate` o Vercel, manda lo que dice este archivo.
+
+---
+
+## Stack del proyecto
+
+* Next.js 16 (App Router) con **export estático** (`output: 'export'`) + TypeScript 6 strict
+* Tailwind CSS v4 (`@tailwindcss/postcss`)
+* Motion 14 (`motion/react`) para animaciones
+* ESLint 10 + `eslint-config-next`
+* Supabase: todavía no instalado ni conectado
+* React Hook Form + Zod: solo si hay formulario de contacto (todavía no instalados)
+
+---
+
+## Dirección estética
+
+**Concepto**: corporativo-técnico, claro y confiable. Hero azul marino a sangre con el contenido centrado, sin foto; tarjetas blancas de servicio que se montan sobre el borde inferior del hero, cada una con el logo y el color de su marca
+**Tipografía display**: Sora (700 títulos, 600 títulos de tarjeta)
+**Tipografía de texto**: DM Sans (400 / 700)
+**Paleta**: marino `#141a3a` (dominante), blanco de fondo, celeste `#2fb4e9` (botón principal y acentos), celeste claro `#7fd3f5` (eyebrow), texto sobre marino `#c9d0e6`
+**Colores por marca** (cada página de servicio usará su `brand` como color principal):
+
+| Marca | brand (texto) | accent (línea/acento) |
 |---|---|---|
-| Framework | **Next.js 14, App Router, TypeScript** | SSR-friendly, export estático, convenciones claras |
-| Estilos | **CSS global con design tokens** (variables CSS en `globals.css`) | Un solo lugar de verdad; Tailwind queda para utilidades puntuales |
-| Animación | CSS + un hook `useScrollReveal` (IntersectionObserver). Framer Motion **solo** si hace falta algo complejo | Liviano, sin dependencias innecesarias |
-| Íconos | SVG inline en un componente `Icon` (equivalentes a Lucide) o `lucide-react` | Control total, sin assets extra |
-| Hosting | **Export estático** (`output: 'export'`) → Hostinger (sube `out/`) o CapRover (Docker+nginx) | Barato, rápido, sin server |
+| Kristalina KI-O | `#27307f` | `#2fb4e9` |
+| Kristalina Klean | `#1f6b2b` | `#8dc63f` |
+| Katharos | `#0f2f5f` | `#3a9be0` |
+
+**Referencia**: guía "Hero · Grupo Kristalina" del cliente (`Página empresarial Kristalina.zip` en la raíz: `index.html` + `README.md`). Es la fuente de verdad de medidas, colores y tipografías.
+**Logos**: `public/img/` — `kristalina.png` (transparente), `klean.png` y `katharos.png` (fondo blanco: se usan con `mix-blend-multiply`; si llegan versiones transparentes, quitarlo).
+
+Los tokens viven en [src/styles/globals.css](src/styles/globals.css) y las fuentes en [src/app/fonts.ts](src/app/fonts.ts): cambiar la dirección es tocar solo esos dos archivos.
 
 ---
 
-## 2. Configuración (copiar tal cual)
+## Comandos
 
-### `next.config.js`
-```js
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  output: 'export',          // sitio 100% estático → carpeta out/
-  images: { unoptimized: true }, // usamos <img> normales, no next/image
-  trailingSlash: true,       // rutas como carpetas con index.html
-};
-module.exports = nextConfig;
+```
+npm run dev          → servidor de desarrollo (http://localhost:3000)
+npm run build        → genera la carpeta out/ lista para subir al hosting
+npm run preview      → sirve out/ en local para probar exactamente lo que se sube
+npm run typecheck    → verificación de tipos (tsc --noEmit)
+npm run lint         → linter
 ```
 
-### `tsconfig.json` (lo importante)
-```json
-{
-  "compilerOptions": {
-    "strict": true,
-    "moduleResolution": "bundler",
-    "jsx": "preserve",
-    "paths": { "@/*": ["./*"] }
-  }
-}
-```
+### Publicar en hosting compartido (Hostinger, SiteGround, etc.)
 
-### `package.json` (deps base)
-```
-next ^14.2.x · react ^18.3 · react-dom ^18.3 · lucide-react · (framer-motion solo si hace falta)
-dev: typescript · @types/node · @types/react · @types/react-dom · tailwindcss · postcss · autoprefixer
-```
+1. `npm run build`
+2. Subir **todo el contenido** de `out/` (incluido el archivo oculto `.htaccess`) a `public_html/`
+3. No hace falta Node en el servidor: son solo archivos HTML, CSS y JS
 
-### Tailwind + PostCSS
-- `tailwind.config.ts`: `content` apuntando a `app/`, `components/`, `lib/`. Sin plugins.
-- `postcss.config.js`: `tailwindcss` + `autoprefixer`.
-- En `globals.css` **NO** es obligatorio usar `@tailwind base/...`; el sistema vive en CSS propio.
+El sitio asume que vive en la raíz del dominio. Si va en una subcarpeta, hay que configurar `basePath` en `next.config.ts`.
 
 ---
 
-## 3. Fuentes — patrón correcto (⚠️ bug clásico)
+## Estructura
 
-Cargar con `next/font/google` y exponer como variables. **El nombre de la variable de
-`next/font` y el token de CSS deben ser DISTINTOS** para no crear una referencia circular.
-
-### `app/layout.tsx`
-```tsx
-// Elegí las fuentes del proyecto. Ejemplo neutro: Sora (display) + Inter (body).
-import { Sora, Inter } from 'next/font/google';
-
-const display = Sora({ subsets: ['latin'], weight: ['400','500','600','700','800'], variable: '--font-display', display: 'swap' });
-const body    = Inter({ subsets: ['latin'], weight: ['400','500','600','700'], variable: '--font-body', display: 'swap' });
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="es" className={`${display.variable} ${body.variable}`}>
-      <body data-theme="light">{children}</body>
-    </html>
-  );
-}
+```
+src/
+  app/                ← rutas, layout raíz, metadata, 404, error, favicon
+  components/
+    sections/         ← una sección de página por archivo (Hero, ...)
+    ui/               ← piezas reutilizables (FadeIn, BotonLink, TarjetaServicio, BloqueServicio, ConectorServicios, OndasAgua, EncabezadoSeccion, FichaProducto, Icono)
+    dynamic/          ← islas conectadas a Supabase (vacía por ahora)
+  content/            ← textos del sitio, tipados (home.ts, site.ts, servicios/ con un archivo por servicio)
+  lib/                ← constantes y utilidades (SITE_URL)
+  styles/globals.css  ← tokens de color y utilidades de diseño
+public/               ← archivos que se copian tal cual a out/ (.htaccess, imágenes)
 ```
 
-### En `globals.css` (consumir, NO redefinir)
-```css
-:root {
-  --display: var(--font-display), sans-serif; /* fallback genérico */
-  --body:    var(--font-body), sans-serif;
-}
-```
-
-> ❌ **NUNCA** hagas esto (rompe TODAS las fuentes → la página cae a serif/Times):
-> ```css
-> --display: var(--font-display);
-> --font-display: var(--display);  /* circular → inválido */
-> ```
+**Para agregar una sección**: crear `src/components/sections/Nombre.tsx`, poner sus textos en `src/content/home.ts` y sumarla en `src/app/page.tsx`.
 
 ---
 
-## 4. Sistema de diseño — `app/globals.css`
+## Páginas de la web
 
-Todo el sistema vive en este archivo, en secciones numeradas:
+| Página | Ruta | Estado | Notas |
+|--------|------|--------|-------|
+| Home | `/` | En desarrollo | Solo sección Hero |
+| Kristalina KI-O | `/kristalina-ki-o/` | Maquetada | 6 secciones con contenido del PDF; faltan testimonios y fotos de instalaciones |
+| Kristalina Klean | `/kristalina-klean/` | Maquetada | Ídem |
+| Katharos | `/katharos/` | Maquetada | Ídem |
 
-```
-1. Design tokens (:root)        → colores, fuentes, radios, --maxw, spacing, --ease
-2. Reset / base                 → box-sizing, márgenes 0, body, img, a, button
-3. Layout helpers               → .container/.wrap (max-width + padding lateral), .section
-4. Tipografía                   → h1..h3, .eyebrow, .grad-text, .lead
-5. Componentes reutilizables    → .btn (variantes), .chip, .card
-6. Animaciones reveal           → .reveal + .d1..d4 (ver sección 6)
-7. Estilos por sección          → .hero, .nav, .footer, etc.
-8. Responsive (al final)        → @media 1000px / 760px / 560px
-```
+Las tres páginas salen de una sola ruta dinámica, [src/app/[servicio]/page.tsx](src/app/[servicio]/page.tsx), con `generateStaticParams` y `dynamicParams = false`: en el build se genera un HTML por servicio y cualquier otro slug da 404. **Agregar un servicio = crear su archivo en [src/content/servicios/](src/content/servicios/) (tipado con `Servicio` de `tipos.ts`) y sumarlo a `SERVICIOS` en `index.ts`**, más su marca en `lib/marcas.ts` y sus colores en `globals.css`. El contenido de cada servicio sale de su PDF en la raíz del proyecto (`KRISTALINA- RESUMEN EJECUTIVO & FICHAS TECNICAS.pdf`, `KRISTALINA KLEAN - ...pdf`, `KATHAROS - ...pdf`).
+| 404 | (cualquier ruta inexistente) | Maquetada | La sirve `.htaccess` vía `/404.html` |
 
-### Tokens mínimos (placeholder, reemplazar con el diseño real)
-```css
-:root {
-  /* TODOS los valores son placeholder neutros: reemplazar por el branding del proyecto. */
-  --bg:#ffffff; --panel:#ffffff; --fg:#111827; --fg-muted:#6b7280; --line:#e5e7eb;
-  --accent:#3b5bdb; --accent-hover:#2f4fc4; --accent-fg:#ffffff;
-  --display: var(--font-display), sans-serif;
-  --body:    var(--font-body), sans-serif;
-  --maxw:1200px; --pad:clamp(20px,5vw,64px);
-  --r-sm:8px; --r-md:14px; --r-lg:20px;
-  --ease:cubic-bezier(.22,.61,.36,1);
-}
-```
+Estados posibles: `Pendiente` / `En desarrollo` / `Maquetada` / `Conectada` / `Completa`
 
-Reglas:
-- **Tema claro por defecto** (`data-theme="light"` en `<body>`). Dejar tokens dark preparados pero sin activar.
-- Crear **clases reutilizables** (`.btn`, `.chip`, `.card`, `.container`, `.eyebrow`) y usarlas.
-- Componentes **nunca** con colores/medidas hardcodeadas: siempre `var(--...)`.
+### Secciones de la home
+
+| Sección | Archivo | Estado |
+|---------|---------|--------|
+| Hero | `src/components/sections/Hero.tsx` | Maquetada según la guía del cliente, pero centrada y sin la columna de foto (pedido del usuario, 2026-11-17) — eyebrow, h1, párrafo, 2 CTAs y 3 tarjetas de servicio sin logo (`ui/TarjetaServicio`). `/#cotizar` todavía no existe |
+| Servicios | `src/components/sections/Servicios.tsx` | Prototipo — 3 bloques apilados (KI-O, Klean, Katharos) con logo, título, texto (tomado de los PDF) y botón "Ver detalles" hacia su página (`ui/BloqueServicio`). Cada tarjeta del hero se une con su bloque por una línea de su color (`ui/ConectorServicios`) |
+
+### Secciones de las páginas de servicio
+
+| Sección | Archivo | Estado |
+|---------|---------|--------|
+| HeroServicio | `src/components/sections/HeroServicio.tsx` | Maquetada — "Volver a servicios", logo centrado sobre ondas de agua (`ui/OndasAgua`), eyebrow, h1, descripción, 2 CTAs y 3 datos clave (`pagina.datos`) |
+| ComoFunciona | `src/components/sections/ComoFunciona.tsx` | Maquetada — pasos numerados unidos por una línea (en fila desde 900px) |
+| BeneficiosServicio | `src/components/sections/BeneficiosServicio.tsx` | Maquetada — 6 tarjetas con ícono (`ui/Icono`) sobre fondo teñido |
+| CaracteristicasServicio | `src/components/sections/CaracteristicasServicio.tsx` | Maquetada — fichas técnicas (`ui/FichaProducto`), foto opcional (solo KI-O) y "Dónde se aplica" |
+| TestimoniosServicio | `src/components/sections/TestimoniosServicio.tsx` | Maquetada con **testimonios pendientes** (etiquetados; los PDF no traen) |
+| ResultadosServicio | `src/components/sections/ResultadosServicio.tsx` | Maquetada con **recuadros de foto pendiente** (faltan fotos de instalaciones) |
 
 ---
 
-## 5. Estructura de carpetas
+## Contenido dinámico — Qué se administra desde el sistema de gestión
 
-```
-app/
-  layout.tsx          # fuentes + metadata global + <body data-theme="light">
-  page.tsx            # home: renderiza el componente contenedor
-  globals.css         # tokens + sistema + secciones + responsive
-  icon.png            # favicon (ver sección 8)
-  favicon.ico         # favicon multi-tamaño
-  <ruta>/page.tsx     # una carpeta por página, con su layout.tsx para metadata
-components/
-  <Pagina>.tsx        # contenedor "use client" que ensambla secciones y activa useScrollReveal
-  Icon.tsx            # registro de íconos SVG inline
-  sections/           # cada sección: Header, Hero, Footer, etc. (1 archivo c/u)
-lib/
-  data.ts             # TODO el contenido, tipado (arrays/objetos)
-  hooks/useScrollReveal.ts
-  utils/cn.ts
-public/
-  logos/ , *.png      # imágenes servidas estáticamente (rutas absolutas /...)
-```
+Ninguno todavía. Todo el contenido es estático en `src/content/`.
 
-### Convenciones de componentes
-- **Contenido siempre en `lib/data.ts`**, tipado, y mapeado en el componente. Cero texto suelto.
-- Páginas que comparten layout (casos de éxito, productos) → **UNA plantilla reutilizable**
-  que recibe datos por props; cada ruta solo le pasa su objeto.
-- El contenedor de la página (`components/<Pagina>.tsx`) es `"use client"`, ensambla las
-  secciones en orden y llama a `useScrollReveal()`.
-- Helper `cn(...)` para clases condicionales.
+| Valor en la web | Origen (tabla/clave) | Default si la base falla | Frescura |
+|-----------------|----------------------|--------------------------|----------|
+| — | — | — | — |
+
+Frescuras posibles **en este proyecto**: `Build` (estático, requiere volver a subir `out/`) / `Cliente (al cargar)` (isla que consulta Supabase en el navegador). **No hay `Revalidate`**: sin servidor no existe ISR.
 
 ---
 
-## 6. Animaciones — reveal **SSR-safe** (⚠️ patrón obligatorio)
+## Base de datos — Tablas que la web lee
 
-La base de los elementos `.reveal` debe ser **VISIBLE**. El ocultar-para-animar se activa
-**solo cuando hay JS**. Así, si el JS tarda o falla, la página se ve **completa y ordenada**
-(no en blanco).
-
-### CSS
-```css
-/* Base: visible. Se oculta SOLO bajo .reveal-on (que agrega el JS). */
-.reveal-on .reveal { opacity:0; transform:translateY(22px); transition:opacity .8s var(--ease), transform .8s var(--ease); }
-.reveal-on .reveal.is-visible { opacity:1; transform:none; }
-.reveal.d1{transition-delay:.08s} .reveal.d2{transition-delay:.16s} .reveal.d3{transition-delay:.24s} .reveal.d4{transition-delay:.32s}
-@media (prefers-reduced-motion: reduce){ .reveal-on .reveal{opacity:1;transform:none;transition:none} }
+```
+[Ninguna todavía]
 ```
 
-### `lib/hooks/useScrollReveal.ts`
-```ts
-'use client';
-import { useEffect } from 'react';
-export function useScrollReveal(): void {
-  useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
-    if (!els.length) return;
-    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const inView = (el: HTMLElement) => { const r = el.getBoundingClientRect(); return r.top < innerHeight*0.92 && r.bottom > 0; };
-    els.forEach(el => { if (inView(el)) el.classList.add('is-visible'); }); // 1) lo visible no parpadea
-    document.documentElement.classList.add('reveal-on');                    // 2) recién ahora se oculta el resto
-    if (reduce || typeof IntersectionObserver === 'undefined') { els.forEach(el => el.classList.add('is-visible')); return; }
-    const io = new IntersectionObserver((entries, o) => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('is-visible'); o.unobserve(e.target); } }), { threshold:0.12, rootMargin:'0px 0px -8% 0px' });
-    els.forEach(el => { if (!el.classList.contains('is-visible')) io.observe(el); });
-    return () => io.disconnect();
-  }, []);
-}
-```
+---
 
-> Para la animación de **entrada del hero**: mismo principio. Base visible; el contenedor
-> agrega una clase (ej. `preload`) tras montar y la quita en el siguiente frame para
-> disparar el stagger. Sin JS / en SSR el hero se ve igual.
+## Checklist de entrega
+
+- [ ] `npm run build` pasa sin errores ni warnings de tipos
+- [ ] Dominio final cargado en `SITE_URL` ([src/lib/constants.ts](src/lib/constants.ts))
+- [ ] Toda tabla que lee la web tiene RLS con SELECT público SOLO de lo publicado
+- [ ] Ningún valor dinámico rompe la página si Supabase no responde
+- [ ] Metadata completa en todas las páginas: title, description, Open Graph con imagen (`public/og.jpg` 1200x630)
+- [ ] `sitemap.ts` y `robots.ts` generados y accesibles
+- [ ] Imágenes pre-optimizadas (WebP/AVIF, tamaño real de uso) y con dimensiones definidas
+- [ ] Lighthouse en móvil: Performance ≥ 90, SEO ≥ 95, Accessibility ≥ 90
+- [ ] Probada en móvil real (no solo el emulador del navegador)
+- [ ] Favicon, título de pestaña y preview al compartir el link por WhatsApp verificados
+- [ ] `.htaccess` subido y 404 personalizada funcionando en el hosting real
+- [ ] Redirect sin www → con www (o al revés) y HTTPS forzado en el hosting
+- [ ] Si hay formulario de contacto: honeypot activo y constraints SQL en la tabla
 
 ---
 
-## 7. Responsive
+## Decisiones técnicas tomadas
 
-- **Desktop-first pragmático**: el sistema se escribe para desktop y al final de `globals.css`
-  va un bloque de refinamiento móvil.
-- Teléfono de referencia: **iPhone 13 Pro (390px)**.
-- Breakpoints: `@media (max-width:1000px)`, `760px`, `640px/560px`.
-- En móvil: reducir `--pad`, evitar overflow horizontal (`body{overflow-x:hidden}`),
-  botones full-width, apilar grids, achicar/ocultar lo que no funcione.
-
----
-
-## 8. Favicon
-
-Usar la **convención de archivos de Next** (funciona con export estático):
-- `app/icon.png` (cuadrado, ~512px) y `app/favicon.ico` (multi-tamaño).
-- Si el logo es **rectangular**, generar un **cuadrado con padding transparente** (centrado),
-  para que no se deforme en la pestaña. (Se puede con Pillow: pegar el logo centrado en un
-  lienzo cuadrado y exportar a `icon.png` + `favicon.ico` con `sizes=[(16,16),(32,32),(48,48),(64,64)]`.)
-- Next genera los `<link rel="icon">` solo.
-
----
-
-## 9. Deploy
-
-### Export estático
-- `npm run build` genera `out/`. Eso es el sitio entero.
-- Usar `<img>` normales (no `next/image`) por el export.
-- Las rutas de assets son **absolutas** (`/_next/...`, `/logos/...`).
-
-### Hostinger
-- Subir el contenido de `out/` al hosting. Listo.
-
-### CapRover (Docker + nginx) — archivos en la raíz
-**`captain-definition`**
-```json
-{ "schemaVersion": 2, "dockerfilePath": "./Dockerfile" }
-```
-**`Dockerfile`** (multi-stage: build Node → sirve con nginx)
-```dockerfile
-FROM node:20-alpine AS builder
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-FROM nginx:1.27-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=builder /app/out /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-**`nginx.conf`** (HTML sin cache, assets hasheados 1 año → cada deploy se ve al instante)
-```nginx
-server {
-  listen 80; server_name _;
-  root /usr/share/nginx/html; index index.html;
-  gzip on; gzip_types text/css application/javascript image/svg+xml application/json; gzip_min_length 1024;
-
-  location = /index.html { add_header Cache-Control "no-cache, no-store, must-revalidate"; add_header Pragma "no-cache"; add_header Expires "0"; }
-  location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)$ { try_files $uri =404; expires 1y; add_header Cache-Control "public, immutable"; }
-  location / { try_files $uri $uri/ $uri.html /404.html; add_header Cache-Control "no-cache, no-store, must-revalidate"; }
-  error_page 404 /404.html;
-}
-```
-**`.dockerignore`**: `node_modules`, `.next`, `out`, `.git`, `_design`, `*.zip`.
-
-> El contenedor expone el **puerto 80** (CapRover lo toma por defecto). Activar HTTPS con Let's Encrypt en el panel.
+* **Export estático en vez de servidor Next.js.** El destino es hosting compartido (Hostinger, SiteGround) sin Node, así que `next.config.ts` usa `output: 'export'` y el build produce `out/`. Consecuencias:
+  * No hay ISR, `revalidate`, `unstable_cache`, rutas API ni Server Actions. El contenido administrado desde Supabase solo puede entrar por **islas de cliente** (`components/dynamic/`) o regenerando el build.
+  * `images.unoptimized: true`: `next/image` no optimiza. Las imágenes se suben ya comprimidas y en su tamaño final.
+  * `trailingSlash: true`: cada ruta se exporta como `carpeta/index.html`, que Apache/LiteSpeed sirven sin reglas de reescritura.
+  * `sitemap.ts` y `robots.ts`, cuando se creen, necesitan `export const dynamic = 'force-static'`.
+* **`public/.htaccess`** define la 404 personalizada, cache largo para `/_next/static/` y compresión. Probado solo en local: verificar en el hosting real.
+* **TypeScript 6, no 7**: `typescript-eslint` (que usa `eslint-config-next`) todavía no soporta TS 7. Subir cuando lo soporte.
+* **Tailwind escanea solo `src/`** (`source('..')` en `globals.css`) para que los ejemplos de clases del kit y de `ai-pmp/` no generen CSS.
+* **Fuentes como utilidades propias** (`font-display`, `font-body` en `globals.css`) en vez de `@theme`, porque `next/font` ya inyecta variables con esos mismos nombres.
+* **`SITE_URL` es un placeholder** (`https://www.example.com`) hasta conocer el dominio.
+* **Colores de marca como tokens** (`--kio-brand`, `--klean-accent`, etc. en `globals.css`). Las clases por marca viven en `src/lib/marcas.ts` (`ESTILOS_MARCA`), escritas completas porque Tailwind no detecta clases armadas dinámicamente.
+* **Temas por marca (`tema-kio`, `tema-klean`, `tema-katharos`)**: utilidades de `globals.css` que definen `--marca-brand` y `--marca-accent` en un contenedor. Dentro, los componentes usan clases genéricas (`bg-marca-brand`, `stroke-marca-accent`, variantes `marca`/`marcaSecundario` de `BotonLink`), así una misma pieza sirve para las tres marcas. Así se cumple la regla de la guía: cada página de servicio toma su `brand` como color principal.
+* **Hero de servicio claro, no oscuro**: los logos de Klean y Katharos tienen fondo blanco y letras oscuras, así que el logo centrado solo funciona sobre fondo claro (con `mix-blend-multiply`). El color de la marca va en el brillo de fondo, las ondas, la línea superior y los botones.
+* **Animaciones de entrada en CSS puro, nunca con estado inicial invisible desde JS** (2026-11-17): `FadeIn` usa la animación `entrada` de `globals.css`. Antes usaba Motion, que renderizaba el contenido con `opacity: 0` hasta que cargara el JavaScript; cuando el JS no cargó, la página quedó vacía (hero sin texto ni botones). Con CSS, el contenido se ve aunque falle el JS. Usa `animation-fill-mode: backwards` y no `both`: si el estado final queda aplicado, el elemento queda aislado del fondo y los logos con `mix-blend-multiply` muestran su recuadro blanco. Motion queda solo para las líneas de `ConectorServicios`, que son decorativas.
+* **En desarrollo, abrir siempre `http://localhost:3000`**: Next 16 bloquea su JavaScript de desarrollo cuando la página se abre desde otra dirección, y entonces no hay líneas ni HMR. `allowedDevOrigins: ['127.0.0.1']` en `next.config.ts` habilita también `127.0.0.1`. La IP de red (`192.168.x.x:3000`) sigue bloqueada; para probar desde el celular, agregarla ahí. No afecta al build de producción.
+* **Líneas tarjeta → bloque (`ConectorServicios`)**: isla de cliente que envuelve `<Hero />` y `<Servicios />` en `page.tsx`. Mide las tarjetas (`data-linea-inicio`) y los logos (`data-linea-fin`) con offsets, que no se ven afectados por las animaciones de entrada, y dibuja un SVG que se recalcula con `ResizeObserver`. Las líneas bajan por carriles a la derecha (la primera tarjeta usa el más interno y gira última) para que nunca se crucen. Por eso `Servicios` reserva `pr-[120px]` desde 900px. Debajo de 900px no se dibujan y cada bloque lleva un borde izquierdo de su color.
+* **Hero centrado, sin foto**: se aparta de la guía del cliente (que tenía texto a la izquierda y foto a la derecha) por pedido del usuario. El padding inferior del hero (`clamp(128px,15vw,216px)`) deja lugar a las tarjetas que se montan encima con margen negativo.
+* **Breakpoint de la guía**: tarjetas en 3 columnas desde 900px (`min-[900px]:`). **No mezclar `sm:`/`md:` con `min-[900px]:` sobre la misma propiedad**: Tailwind v4 puede ordenar `sm:` después y pisar la regla de 900px (pasó en Resultados). Usar `min-[640px]:` junto a `min-[900px]:`.
+* **Páginas de servicio = una sola estructura para las tres marcas** (2026-11-17): el `div` con `tema-*` en `[servicio]/page.tsx` tiñe todas las secciones. El contenido vino de los PDF del cliente; se mantuvo su tono prudente ("favorece", "busca") sin prometer de más. Testimonios y fotos de instalaciones no existían: quedan como pendientes visibles, nunca inventados.
+* **Foto del KI-O** (`public/img/servicios/kio-ionizador.jpg`, 38 KB) extraída tal cual del PDF de fichas técnicas.
 
 ---
 
-## 10. Verificación (no confiar solo en "compila")
+## Estado actual del desarrollo
 
-1. `npm run build` → debe terminar verde y generar `out/`.
-2. Servir el export y **mirar un screenshot**:
-   ```bash
-   python -m http.server 8080 --directory out
-   # luego, headless (Windows + Edge):
-   # msedge --headless=new --disable-gpu --user-data-dir=<temp> --window-size=1280,900 --screenshot=out.png http://localhost:8080/
-   ```
-3. Confirmar: estilos aplicados (no serif/links azules), fuentes correctas, secciones visibles.
-4. Revisar el `<head>`: que el `<link rel="stylesheet">` cargue **200** y `text/css`.
+**Última sesión**: 2026-11-17
+**Próximo paso**: énfasis de diseño en las páginas de servicio (pedido del usuario), y cargar testimonios reales y fotos de instalaciones.
 
----
+**Lo que está funcionando**:
+* Infraestructura completa: Next.js con export estático, Tailwind v4, Motion, ESLint, TypeScript strict
+* Hero replicado de la guía del cliente, comparado lado a lado con su `index.html` en 390, 900 y 1440px
+* 404 y página de error con la estética del sitio
+* Favicon (`src/app/icon.svg`, gota celeste sobre marino)
+* `npm run build`, `npm run typecheck` y `npm run lint` pasan limpios
 
-## 11. ⚠️ Errores conocidos y cómo evitarlos
+**Lo que está pendiente**:
+* Completar cliente y "desarrollado por" en este archivo
+* Dominio final en `SITE_URL`
+* Imagen Open Graph `public/og.jpg`
+* Testimonios reales (con autorización) en `content/servicios/*.ts` — hoy salen de `testimoniosPendientes()` con etiqueta "Testimonio pendiente"
+* Fotos de instalaciones para Resultados (`resultados.fotos[].imagen`) — hoy recuadros "Foto pendiente"
+* Barra de navegación, formulario `#cotizar`, footer
+* Páginas dedicadas de cada servicio (destino de las tarjetas)
+* Logos en WebP o PNG transparente (hoy PNG de 74–112 KB; Klean y Katharos con fondo blanco)
+* `sitemap.ts`, `robots.ts` y JSON-LD (etapa de SEO)
+* Repositorio git (no inicializado todavía)
 
-> Estos ya nos pasaron. Leer antes de tocar nada.
-
-1. **Página "desordenada" / sin estilos (serif, links azules, íconos gigantes).**
-   Casi siempre = **el CSS no carga/aplica**. Causas frecuentes:
-   - **Correr `npm run build` mientras `npm run dev` está activo** (o dos `npm run dev`)
-     desde la misma carpeta → ambos escriben en `.next` y lo corrompen → el CSS da **404**.
-     **Fix:** parar todo, `rm -rf .next` (PowerShell: `Remove-Item -Recurse -Force .next`),
-     y volver a `npm run dev`. **Regla: nunca build + dev a la vez.**
-   - **Abrir `out/index.html` con doble clic (file://)** → las rutas absolutas `/_next/...`
-     no resuelven. **Fix:** servirlo (Hostinger/CapRover en raíz, o `python -m http.server --directory out`).
-
-2. **Fuentes rotas (todo cae a Times/serif).** Referencia circular entre `--display`/`--font-display`.
-   Ver sección 3: la variable de `next/font` y el token de CSS deben ser **distintos**.
-
-3. **Al entrar, las secciones aparecen en blanco hasta scrollear.** Reveal mal hecho
-   (base oculta dependiendo del JS). Usar el patrón **SSR-safe** de la sección 6.
-
-4. **Logo se ve "flotando" / con mucho espacio.** Los PNG suelen traer **espacio en blanco
-   interno**. Soluciones: recortar el whitespace (Pillow/ImageMagick) o, temporalmente,
-   compensar con márgenes. Para el favicon, generar un cuadrado con padding.
-
-5. **Imágenes pesadas.** Optimizar antes de producción (un logo no debería pesar MB).
-
-6. **Cache en producción tras deploy.** Si no se ven los cambios: el `index.html` quedó
-   cacheado. Por eso `nginx.conf` lo marca `no-cache` (sección 9). La primera vez, hard refresh.
+**Problemas conocidos o deuda técnica**:
+* Ninguno
 
 ---
 
-## 12. Checklist final de un scaffold
+## Instrucciones para la IA
 
-- [ ] `next.config.js` con `output:'export'` + `images.unoptimized`.
-- [ ] `tsconfig` con alias `@/*`.
-- [ ] Fuentes con `next/font` (variables distintas, sin circular).
-- [ ] `globals.css` con tokens + secciones + responsive al final.
-- [ ] `lib/data.ts` con TODO el contenido tipado.
-- [ ] `components/sections/` (Header, Hero, Footer mínimo) mapeando data.
-- [ ] `useScrollReveal` SSR-safe + reveal CSS bajo `.reveal-on`.
-- [ ] Favicon `app/icon.png` + `app/favicon.ico`.
-- [ ] Deploy: `Dockerfile`, `nginx.conf`, `captain-definition`, `.dockerignore`.
-- [ ] `npm run build` verde + `out/` generado + screenshot OK.
+1. **Antes de escribir cualquier código**, leer los documentos de `ai-pmp/` referenciados arriba.
+2. **Respetar la dirección estética definida** en este archivo — no cambiar fuentes, paleta ni concepto sin que el usuario lo pida.
+3. **No empezar nuevas páginas o secciones** sin que el usuario lo indique explícitamente.
+4. **Antes de entregar cualquier cambio**: correr `npm run typecheck` y verificar que no hay imports rotos ni errores. Si el cambio es grande, verificar también que `npm run build` pasa.
+5. **Nada que requiera servidor**: este sitio es export estático. No usar ISR, `revalidate`, `unstable_cache`, rutas API, Server Actions, `cookies()` ni `headers()`.
+6. **Todo valor que venga de Supabase debe tener default hardcodeado** — la web nunca puede romperse ni quedar en blanco por un fallo de la base.
+7. **Si hay ambigüedad** en un requerimiento, preguntar antes de implementar.
+8. **No agregar dependencias nuevas** sin consultarlo primero.
+9. **Los textos van en `src/content/`**, nunca hardcodeados en el JSX de las secciones.
+10. **Actualizar las tablas de páginas, secciones y contenido dinámico** de este archivo cuando se complete una.
+11. **El límite es 300 líneas por archivo** — si se supera, dividir en subcomponentes.
+12. **Nunca leer, imprimir ni commitear el contenido de `.env`** ni de ningún archivo con credenciales.
+13. **La web nunca escribe en Supabase** salvo la tabla del formulario de contacto.
+14. **Después de cualquier cambio de schema en Supabase**, correr `get_advisors` del MCP y corregir las alertas antes de dar por terminada la tarea.
+15. **Al terminar una sesión de trabajo**, actualizar la sección "Estado actual del desarrollo" de este archivo.
