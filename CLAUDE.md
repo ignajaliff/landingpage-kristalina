@@ -202,6 +202,7 @@ Frescuras posibles **en este proyecto**: `Build` (estático, requiere volver a s
 * **En desarrollo, abrir siempre `http://localhost:3000`**: Next 16 bloquea su JavaScript de desarrollo cuando la página se abre desde otra dirección, y entonces no hay líneas ni HMR. `allowedDevOrigins: ['127.0.0.1']` en `next.config.ts` habilita también `127.0.0.1`. La IP de red (`192.168.x.x:3000`) sigue bloqueada; para probar desde el celular, agregarla ahí. No afecta al build de producción.
 * **Líneas tarjeta → bloque (`ConectorServicios`)**: isla de cliente que envuelve `<Hero />` y `<Servicios />` en `page.tsx`. Mide las tarjetas (`data-linea-inicio`) y los logos (`data-linea-fin`) con offsets, que no se ven afectados por las animaciones de entrada, y dibuja un SVG que se recalcula con `ResizeObserver`. Las líneas bajan por carriles a la derecha (la primera tarjeta usa el más interno y gira última) para que nunca se crucen. Por eso `Servicios` reserva `pr-[120px]` desde 900px. Debajo de 900px no se dibujan y cada bloque lleva un borde izquierdo de su color.
 * **Hero centrado, sin foto**: se aparta de la guía del cliente (que tenía texto a la izquierda y foto a la derecha) por pedido del usuario. El padding inferior del hero (`clamp(128px,15vw,216px)`) deja lugar a las tarjetas que se montan encima con margen negativo.
+* **Repositorio**: github.com/ignajaliff/landingpage-kristalina (público). Este proyecto vive en la rama `sitio-estatico`, creada sobre el historial de `main`. `main` tiene otra landing (Docker + CapRover, `captain-definition`): no se pisó por pedido del usuario (2026-11-17). Si se fusiona, CapRover podría desplegar `main` y fallar, porque este sitio es export estático sin Dockerfile. Los PDF, el zip del cliente y el kit `KNOW - HOW WEB` están en `.gitignore` para no publicarlos.
 * **Breakpoint de la guía**: tarjetas en 3 columnas desde 900px (`min-[900px]:`). **No mezclar `sm:`/`md:` con `min-[900px]:` sobre la misma propiedad**: Tailwind v4 puede ordenar `sm:` después y pisar la regla de 900px (pasó en Resultados). Usar `min-[640px]:` junto a `min-[900px]:`.
 * **Páginas de servicio = una sola estructura para las tres marcas** (2026-11-17): el `div` con `tema-*` en `[servicio]/page.tsx` tiñe todas las secciones. El contenido vino de los PDF del cliente; se mantuvo su tono prudente ("favorece", "busca") sin prometer de más. Testimonios y fotos de instalaciones no existían: quedan como pendientes visibles, nunca inventados.
 * **Foto del KI-O** (`public/img/servicios/kio-ionizador.jpg`, 38 KB) extraída tal cual del PDF de fichas técnicas.
@@ -230,7 +231,7 @@ Frescuras posibles **en este proyecto**: `Build` (estático, requiere volver a s
 * Páginas dedicadas de cada servicio (destino de las tarjetas)
 * Logos en WebP o PNG transparente (hoy PNG de 74–112 KB; Klean y Katharos con fondo blanco)
 * `sitemap.ts`, `robots.ts` y JSON-LD (etapa de SEO)
-* Repositorio git (no inicializado todavía)
+* Decidir si la rama `sitio-estatico` reemplaza a `main` en GitHub (ver Decisiones técnicas)
 
 **Problemas conocidos o deuda técnica**:
 * Ninguno
