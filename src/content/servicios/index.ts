@@ -3,6 +3,7 @@
 import { katharos } from './katharos'
 import { kio } from './kio'
 import { klean } from './klean'
+import { type Marca } from '@/lib/marcas'
 import { type Servicio } from './tipos'
 
 export const SERVICIOS: readonly Servicio[] = [kio, klean, katharos]
@@ -13,14 +14,21 @@ export function getServicio(slug: string): ServicioData | undefined {
   return SERVICIOS.find((servicio) => servicio.slug === slug)
 }
 
+// Cada marca tiene exactamente un servicio: si falta, es un error de contenido y debe fallar el build
+export function getServicioPorMarca(marca: Marca): ServicioData {
+  const servicio = SERVICIOS.find((s) => s.marca === marca)
+  if (!servicio) throw new Error(`Falta el servicio de la marca "${marca}" en content/servicios`)
+  return servicio
+}
+
 // Textos fijos de las páginas de servicio
 export const paginaServicioContent = {
   eyebrow: 'Línea de servicio · Grupo Kristalina',
   volver: 'Volver a servicios',
   volverHref: '/#servicios',
-  // TODO: #cotizar → formulario de cotización
-  ctaPrincipal: { texto: 'Solicitar cotización', href: '/#cotizar' },
-  ctaSecundario: { texto: 'Hablar con un asesor', href: '/#cotizar' },
+  // Llevan a la sección Contacto de la home (cuando haya WhatsApp, "Hablar con un asesor" puede ir directo ahí)
+  ctaPrincipal: { texto: 'Solicitar cotización', href: '/#contacto' },
+  ctaSecundario: { texto: 'Hablar con un asesor', href: '/#contacto' },
   // Eyebrow de cada sección (el título y la intro cambian por servicio)
   secciones: {
     comoFunciona: 'Cómo funciona',

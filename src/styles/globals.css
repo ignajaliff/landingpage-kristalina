@@ -2,70 +2,139 @@
 @import 'tailwindcss' source('..');
 
 /* ── Tokens de diseño ─────────────────────────────────────────────
-   Única fuente de color del sitio (guía "Hero · Grupo Kristalina").
+   Única fuente de color del sitio. La home sigue el handoff de Claude Design
+   ("Landing page con transiciones verdes"); las páginas de servicio, la guía original.
    Cambiar la paleta = cambiar solo estos valores. */
 :root {
   --background: #ffffff;
   --foreground: #1c2333;
+  --foreground-soft: #262c41; /* bajada del hero */
+  --foreground-muted: #3b4256; /* párrafos de las secciones */
 
-  /* Azul marino institucional: fondo del hero y títulos */
+  /* Azul tinta institucional: títulos, botón principal, header con scroll */
   --primary: #141a3a;
+  --primary-hover: #252d60;
   --primary-foreground: #ffffff;
   --primary-muted: #c9d0e6; /* texto secundario sobre el marino */
+  --hero-fondo: #d6e7f5; /* color mientras carga la foto del hero */
 
-  /* Celeste: botón principal, eyebrow */
+  /* Sección Contacto de la home (cierre oscuro) */
+  --contacto-fondo: #121a3e;
+  --contacto-mapa: #1b2552;
+  --contacto-icono: #7fd0f2;
+
+  /* Celeste: botón principal de las páginas de servicio, eyebrow */
   --accent: #2fb4e9;
   --accent-foreground: #0d1230;
   --accent-soft: #7fd3f5;
 
-  --border: #e3e7ee;
-  --surface-hover: #f6f8fb;
+  --border: #e3e8ef;
+  --border-boton: #cbd4e1;
+  --border-boton-hover: #94a7c2;
+  --surface-hover: #f5f8fc;
 
-  /* Colores de cada línea de servicio (texto de marca + acento) */
-  --kio-brand: #27307f;
-  --kio-accent: #2fb4e9;
-  --klean-brand: #1f6b2b;
-  --klean-accent: #8dc63f;
+  /* Cada línea de servicio: brand = texto y botones, accent = su línea de color,
+     titulo / fondo / foto = su sección en la home */
+  --kio-brand: #26317f;
+  --kio-brand-hover: #1b2461;
+  --kio-accent: #2eb4e8;
+  --kio-fondo: #e4f2fa;
+  --kio-foto: #cfe6f4;
+
+  --klean-brand: #1e6b2a;
+  --klean-brand-hover: #16531f;
+  --klean-accent: #8cc63e;
+  --klean-titulo: #1d5f27;
+  --klean-fondo: #ecf4e1;
+  --klean-foto: #d8eac2;
+
   --katharos-brand: #0f2f5f;
-  --katharos-accent: #3a9be0;
+  --katharos-brand-hover: #0a2247;
+  --katharos-accent: #3a9be0; /* acento de su página de servicio */
+  --katharos-linea: #17285e; /* su línea en la home */
+  --katharos-linea-oscuro: #9fb2ec; /* su línea sobre el header oscuro */
+  --katharos-titulo: #1c4570;
+  --katharos-fondo: #e7ebf5;
+  --katharos-foto: #d3dbec;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-foreground-muted: var(--foreground-muted);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-muted: var(--primary-muted);
+  --color-hero-fondo: var(--hero-fondo);
+  --color-contacto-fondo: var(--contacto-fondo);
+  --color-contacto-mapa: var(--contacto-mapa);
+  --color-contacto-icono: var(--contacto-icono);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
   --color-border: var(--border);
+  --color-border-boton: var(--border-boton);
+  --color-border-boton-hover: var(--border-boton-hover);
   --color-surface-hover: var(--surface-hover);
   --color-kio-brand: var(--kio-brand);
   --color-kio-accent: var(--kio-accent);
+  --color-kio-fondo: var(--kio-fondo);
   --color-klean-brand: var(--klean-brand);
   --color-klean-accent: var(--klean-accent);
   --color-katharos-brand: var(--katharos-brand);
   --color-katharos-accent: var(--katharos-accent);
+  --color-katharos-linea: var(--katharos-linea);
+  --color-katharos-linea-oscuro: var(--katharos-linea-oscuro);
   /* Color de la marca activa: lo define una clase tema-* en un ancestro */
   --color-marca-brand: var(--marca-brand);
+  --color-marca-hover: var(--marca-hover);
   --color-marca-accent: var(--marca-accent);
+  --color-marca-linea: var(--marca-linea);
+  --color-marca-titulo: var(--marca-titulo);
+  --color-marca-fondo: var(--marca-fondo);
+  --color-marca-foto: var(--marca-foto);
+
+  /* Sombras: todas en azul tinta, con offset negativo grande para que se vean suaves */
+  --shadow-panel:
+    0 30px 60px -28px color-mix(in srgb, var(--primary) 32%, transparent),
+    0 2px 8px color-mix(in srgb, var(--primary) 6%, transparent);
+  --shadow-placa: 0 20px 40px -20px color-mix(in srgb, var(--primary) 40%, transparent);
+  --shadow-foto: 0 34px 60px -36px color-mix(in srgb, var(--primary) 50%, transparent);
+  --shadow-boton: 0 12px 26px -14px color-mix(in srgb, var(--primary) 60%, transparent);
+  --shadow-cta: 0 16px 30px -18px color-mix(in srgb, var(--marca-brand) 80%, transparent);
 }
 
 /* Temas por línea de servicio: aplicados en un contenedor, tiñen con su marca todo lo de adentro */
 @utility tema-kio {
   --marca-brand: var(--kio-brand);
+  --marca-hover: var(--kio-brand-hover);
   --marca-accent: var(--kio-accent);
+  --marca-linea: var(--kio-accent);
+  --marca-titulo: var(--kio-brand);
+  --marca-fondo: var(--kio-fondo);
+  --marca-foto: var(--kio-foto);
 }
 
 @utility tema-klean {
   --marca-brand: var(--klean-brand);
+  --marca-hover: var(--klean-brand-hover);
   --marca-accent: var(--klean-accent);
+  --marca-linea: var(--klean-accent);
+  --marca-titulo: var(--klean-titulo);
+  --marca-fondo: var(--klean-fondo);
+  --marca-foto: var(--klean-foto);
 }
 
 @utility tema-katharos {
   --marca-brand: var(--katharos-brand);
+  --marca-hover: var(--katharos-brand-hover);
   --marca-accent: var(--katharos-accent);
+  --marca-linea: var(--katharos-linea);
+  --marca-titulo: var(--katharos-titulo);
+  --marca-fondo: var(--katharos-fondo);
+  --marca-foto: var(--katharos-foto);
 }
 
 /* Fondo del hero de cada servicio: blanco con luz del color de la marca */
@@ -76,13 +145,31 @@
     linear-gradient(to bottom, transparent 60%, color-mix(in srgb, var(--marca-accent) 6%, transparent));
 }
 
-/* Tipografías: las variables las inyecta next/font (src/app/fonts.ts) */
+/* Tipografías: las variables las inyecta next/font (src/app/fonts.ts).
+   display y body son de todo el sitio; el resto solo se carga en la home */
 @utility font-display {
   font-family: var(--font-display), system-ui, sans-serif;
 }
 
 @utility font-body {
   font-family: var(--font-body), system-ui, sans-serif;
+}
+
+@utility font-hero {
+  font-family: var(--font-hero), Georgia, serif;
+}
+
+/* Títulos de cada sección de la home, inspirados en su logo */
+@utility font-titulo-kio {
+  font-family: var(--font-titulo-kio), var(--font-body), system-ui, sans-serif;
+}
+
+@utility font-titulo-klean {
+  font-family: var(--font-titulo-klean), var(--font-body), system-ui, sans-serif;
+}
+
+@utility font-titulo-katharos {
+  font-family: var(--font-titulo-katharos), Optima, Georgia, serif;
 }
 
 /* Entrada de contenido (componente FadeIn). Sin JavaScript: si algo falla, el contenido igual se ve */

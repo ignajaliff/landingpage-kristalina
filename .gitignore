@@ -14,3 +14,9 @@ next-env.d.ts
 /*.pdf
 /*.zip
 /KNOW - HOW WEB/
+
+# Imágenes de referencia sueltas en la raíz (capturas de diseño, fotos originales en alta).
+# Las que usa el sitio van optimizadas en public/
+/*.png
+/*.jpg
+/*.jpeg

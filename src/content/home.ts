@@ -1,30 +1,29 @@
 // Textos de la home, una constante por sección.
-// Los datos de cada servicio (logo, títulos, textos) viven en content/servicios.ts.
+// El título, el texto, el logo y la URL de cada servicio viven en content/servicios/ (campo `bloque`).
+// Los datos de contacto viven en content/contacto.ts.
 import { type Marca } from '@/lib/marcas'
 
-type TarjetaServicio = {
-  marca: Marca
-  titulo: string
-  href: string
-}
-
 export const heroContent = {
-  eyebrow: 'Grupo Kristalina · Chile',
   titulo: 'Soluciones para el agua y las redes sanitarias de su edificio',
   descripcion:
     'Tres líneas de servicio para administradores de edificios: prevención de sarro, limpieza de desagües y tratamiento biológico de grasas.',
-  // TODO: #cotizar → formulario de cotización
-  ctaPrincipal: { texto: 'Solicitar cotización', href: '/#cotizar' },
-  ctaSecundario: { texto: 'Conocer los servicios', href: '/#servicios' },
-  ctaTarjeta: 'Ver servicio',
-  // Cada tarjeta baja con una línea de su color hasta su bloque en la sección Servicios
-  tarjetas: [
-    { marca: 'kio', titulo: 'Sarro e incrustaciones calcáreas', href: '/#kristalina-ki-o' },
-    { marca: 'klean', titulo: 'Desagües y matrices sanitarias obstruidas', href: '/#kristalina-klean' },
-    { marca: 'katharos', titulo: 'Grasas, aceites y olores en cámaras y alcantarillado', href: '/#katharos' },
-  ] satisfies TarjetaServicio[],
+  fotoAlt: 'Edificios de vidrio junto al agua, unidos por tres líneas de color',
+  ctaPrincipal: { texto: 'Solicitar cotización', href: '#contacto' },
+  ctaSecundario: { texto: 'Conocer los servicios', href: '#servicios' },
 } as const
 
-export const serviciosContent = {
+// Panel de tarjetas y secciones de cada servicio
+export const serviciosHomeContent = {
+  etiquetaPanel: 'Servicios',
+  ctaTarjeta: 'Ver servicio',
   ctaDetalle: 'Ver detalles',
+  fotoPendiente: 'Foto pendiente',
+  // El problema que resuelve cada línea: título de su tarjeta y eyebrow de su sección
+  problemas: {
+    kio: 'Sarro e incrustaciones calcáreas',
+    klean: 'Desagües y matrices sanitarias obstruidas',
+    katharos: 'Grasas, aceites y olores en cámaras y alcantarillado',
+  } satisfies Record<Marca, string>,
+  // Orden de las tarjetas, de izquierda a derecha (el verde queda a la derecha)
+  ordenTarjetas: ['kio', 'katharos', 'klean'] satisfies Marca[],
 } as const
